@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Google Sheet Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background: #f2f2f2; }
+  </style>
+</head>
+<body>
+  <h1>🚀 Google Sheet → Website (Real-time)</h1>
+  <p>ดึงข้อมูลจาก Google Sheet CSV โดยตรง</p>
+
+  <table id="dataTable"></table>
+
+  <script>
+    // 👉 เปลี่ยนเป็นลิงก์ CSV ของคุณ (Publish to web ก่อน)
+    const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRFg6OuTW6gmzbokx8ftjarDz1MlJZPZuzdT19Hpzhp_C0o5tAnB8ezqwdN8JYIQsjLu4MB-2GOG8Uv/pubhtml";
+
+    fetch(sheetUrl)
+      .then(res => res.text())
+      .then(csvText => {
+        const rows = csvText.split("\n").map(r => r.split(","));
+        const table = document.getElementById("dataTable");
+
+        // สร้าง header
+        let thead = "<tr>";
+        rows[0].forEach(col => thead += `<th>${col}</th>`);
+        thead += "</tr>";
+        table.innerHTML = thead;
+
+        // สร้าง rows
+        rows.slice(1).forEach(r => {
+          let rowHtml = "<tr>";
+          r.forEach(col => rowHtml += `<td>${col}</td>`);
+          rowHtml += "</tr>";
+          table.innerHTML += rowHtml;
+        });
+      })
+      .catch(err => console.error("Error loading sheet:", err));
+  </script>
+</body>
+</html>
+
